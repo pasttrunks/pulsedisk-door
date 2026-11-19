@@ -13,6 +13,15 @@ import { pair } from './client.mjs';
   }
   bridge.addEventListener('load', enableConnect, { once: true });
   enableConnect();
+  // Pre-fill the address words when opened from the PC doorway's QR code (#code=...).
+  if (location.hash && location.hash.indexOf('#code=') === 0) {
+    try {
+      var pre = decodeURIComponent(location.hash.slice(6)).trim();
+      var inp = $('code');
+      if (pre && inp) inp.value = pre;
+      history.replaceState(null, '', location.pathname + location.search);
+    } catch (_) { /* ignore malformed hash */ }
+  }
   var watching = false;
 
   // ---- Words ----
