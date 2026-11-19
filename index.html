@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>PulseDisk doorway</title>
+<link rel="stylesheet" href="door.css">
+</head>
+<body>
+<div class="sky" aria-hidden="true"><i></i><i></i><i></i></div>
+<header class="brand"><span class="brand-mark" aria-hidden="true"></span>PulseDisk</header>
+
+<main id="app" data-screen="code">
+  <!-- 1. The code -->
+  <section class="screen" id="screen-code" aria-labelledby="code-title">
+    <div class="door-glyph" aria-hidden="true"><span class="door-light"></span><span class="door-leaf"></span></div>
+    <h1 id="code-title">Enter the words from your PC</h1>
+    <form id="knock" class="knock" autocomplete="off">
+      <input id="code" name="code" class="code-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go"
+        maxlength="64" aria-label="Address words" aria-describedby="code-error">
+      <button id="knock-btn" class="btn btn-warm" type="submit" disabled>Connect</button>
+    </form>
+    <p id="code-error" class="line line-error" role="alert"></p>
+  </section>
+
+  <!-- 2. The shapes, while the PC decides -->
+  <section class="screen" id="screen-shapes" aria-labelledby="shapes-title" hidden>
+    <h1 id="shapes-title">Check your PC shows these shapes</h1>
+    <p class="line">Compare all three shapes and colors. If they match, choose Allow on your PC.</p>
+    <div id="shapes" class="shapes" role="list" aria-label="Shapes"></div>
+    <div class="pair-actions"><button id="shape-no" class="btn btn-quiet" type="button">They differ</button>
+      <button id="shape-yes" class="btn btn-warm" type="button">They match</button></div>
+    <div class="pair-actions"><button id="shape-no" class="btn btn-quiet" type="button">They differ</button>
+      <button id="shape-yes" class="btn btn-warm" type="button">They match</button></div>
+    <p class="waiting" role="status"><i></i><i></i><i></i><span class="sr">Waiting for the PC</span></p>
+  </section>
+
+  <!-- 3. Inside: the well, and what the PC offers -->
+  <section class="screen" id="screen-inside" aria-labelledby="inside-title" hidden>
+    <h1 id="inside-title" class="sr">Send files to your PC</h1>
+    <label id="well" class="well" for="pick" tabindex="-1">
+      <svg class="well-liquid" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+        <defs>
+          <clipPath id="well-clip"><circle cx="100" cy="100" r="97"></circle></clipPath>
+          <linearGradient id="well-fill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffd59a"></stop>
+            <stop offset="1" stop-color="#ff9d4d"></stop>
+          </linearGradient>
+        </defs>
+        <g clip-path="url(#well-clip)">
+          <g id="liquid" class="liquid">
+            <path class="wave wave-back" d="M0 10 Q 25 0 50 10 T 100 10 T 150 10 T 200 10 T 250 10 T 300 10 T 350 10 T 400 10 V 260 H 0 Z"></path>
+            <path class="wave wave-front" d="M0 10 Q 25 20 50 10 T 100 10 T 150 10 T 200 10 T 250 10 T 300 10 T 350 10 T 400 10 V 260 H 0 Z"></path>
+          </g>
+        </g>
+      </svg>
+      <span class="well-text">
+        <strong id="well-title">Drop files here</strong>
+        <span id="well-line">or <u>choose files</u></span>
+      </span>
+      <input id="pick" type="file" multiple class="sr" tabindex="0">
+    </label>
+    <div class="pour-actions"><button id="stop" class="btn btn-quiet" type="button" hidden>Stop</button></div>
+    <ul id="sent" class="files" aria-label="Sent to the PC"></ul>
+
+    <div id="offer-wrap" class="offer" hidden>
+      <h2>From your PC</h2>
+      <ul id="offer" class="files" aria-label="Files from the PC"></ul>
+    </div>
+  </section>
+
+  <!-- 4. Pairing or connection ended -->
+  <section class="screen" id="screen-end" aria-labelledby="end-title" hidden>
+    <div class="door-glyph shut" aria-hidden="true"><span class="door-light"></span><span class="door-leaf"></span></div>
+    <h1 id="end-title">The door is closed</h1>
+    <p id="end-line" class="line"></p>
+    <button id="again" class="btn btn-quiet" type="button">Try again</button>
+  </section>
+</main>
+
+<iframe id="relay-bridge" title="PulseDisk relay bridge" sandbox="allow-same-origin allow-scripts allow-popups" src="relay-bridge.html" hidden></iframe>
+<script type="module" src="door-page.js"></script>
+</body>
+</html>
