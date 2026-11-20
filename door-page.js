@@ -1,4 +1,5 @@
 import { pair } from './client.mjs';
+import { openWebRtc } from './webrtc.mjs';
 
 (function () {
   if (!window.isSecureContext || window.top !== window) return;
@@ -7,21 +8,25 @@ import { pair } from './client.mjs';
   var door = null;
   var relay = null;
   var busy = false;
+  var rtcRoom = null;
   var bridge = $('relay-bridge');
   function enableConnect() {
-    if (typeof bridge.contentWindow?.openPulseDiskRelay === 'function') $('knock-btn').disabled = false;
+    if (rtcRoom || typeof bridge.contentWindow?.openPulseDiskRelay === 'function') $('knock-btn').disabled = false;
   }
   bridge.addEventListener('load', enableConnect, { once: true });
-  enableConnect();
-  // Pre-fill the address words when opened from the PC doorway's QR code (#code=...).
-  if (location.hash && location.hash.indexOf('#code=') === 0) {
+  // Pre-fill the address words (and optional WebRTC room id) when opened from the PC doorway's QR code.
+  if (location.hash && location.hash.length > 1) {
     try {
-      var pre = decodeURIComponent(location.hash.slice(6)).trim();
+      var hashParams = new URLSearchParams(location.hash.slice(1));
+      var pre = (hashParams.get('code') || '').trim();
+      var room = (hashParams.get('r') || '').trim();
       var inp = $('code');
       if (pre && inp) inp.value = pre;
+      if (/^[A-Za-z0-9_-]{12,32}$/.test(room)) rtcRoom = room;
       history.replaceState(null, '', location.pathname + location.search);
     } catch (_) { /* ignore malformed hash */ }
   }
+  enableConnect();
   var watching = false;
 
   // ---- Words ----
@@ -123,16 +128,33 @@ import { pair } from './client.mjs';
     });
   }
 
-  // Open the relay during the Connect gesture so the browser permits the popup.
-  $('knock').addEventListener('submit', async function (event) {
-    event.preventDefault();
+  // Connect via single-tab WebRTC when a room id is present, with automatic fallback to the 2-tab relay.
+  async function connectDoor(allowPopupFallback) {
     if (busy || $('knock-btn').disabled) return;
     busy = true;
     $('knock-btn').disabled = true;
     $('code-error').textContent = '';
     try {
-      relay = bridge.contentWindow.openPulseDiskRelay($('code').value);
-      await relay.waitReady();
+      var connected = false;
+      if (rtcRoom) {
+        try {
+          relay = openWebRtc(rtcRoom);
+          await relay.waitReady();
+          connected = true;
+        } catch (_) {
+          relay?.close();
+          relay = null;
+          rtcRoom = null; // next Connect tap uses the 2-tab relay synchronously on the click gesture
+        }
+      }
+      if (!connected) {
+        if (!allowPopupFallback) {
+          $('code-error').textContent = 'Direct connect was unavailable. Tap Connect to use the fallback tab.';
+          return;
+        }
+        relay = bridge.contentWindow.openPulseDiskRelay($('code').value);
+        await relay.waitReady();
+      }
       door = await pair(relay.send);
       $('shape-no').disabled = $('shape-yes').disabled = false;
       $('pair-actions').hidden = false;
@@ -175,7 +197,17 @@ import { pair } from './client.mjs';
       busy = false;
       $('knock-btn').disabled = false;
     }
+  }
+
+  $('knock').addEventListener('submit', function (event) {
+    event.preventDefault();
+    void connectDoor(true);
   });
+
+  // QR scan with a WebRTC room id connects automatically in the same tab (no popup gesture required).
+  if (rtcRoom) {
+    void connectDoor(false);
+  }
 
   $('again').addEventListener('click', function () { $('code').value = ''; $('code-error').textContent = ''; show('code'); $('code').focus(); });
 
