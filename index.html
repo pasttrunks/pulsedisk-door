@@ -6,13 +6,12 @@
 <meta name="color-scheme" content="light dark">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>PulseDisk doorway</title>
 <link rel="stylesheet" href="door.css">
 </head>
 <body>
 <div class="sky" aria-hidden="true"><i></i><i></i><i></i></div>
-<header class="brand"><span class="brand-mark" aria-hidden="true"></span>PulseDisk</header>
+<header class="brand"><img class="brand-mark" src="logo-mark.svg" alt="" width="22" height="22">PulseDisk</header>
 
 <main id="app" data-screen="code">
   <!-- 1. The code -->
@@ -32,10 +31,9 @@
     <h1 id="shapes-title">Check your PC shows these shapes</h1>
     <p class="line">Compare all three shapes and colors. If they match, choose Allow on your PC.</p>
     <div id="shapes" class="shapes" role="list" aria-label="Shapes"></div>
-    <div class="pair-actions"><button id="shape-no" class="btn btn-quiet" type="button">They differ</button>
+    <div id="pair-actions" class="pair-actions"><button id="shape-no" class="btn btn-quiet" type="button">They differ</button>
       <button id="shape-yes" class="btn btn-warm" type="button">They match</button></div>
-    <div class="pair-actions"><button id="shape-no" class="btn btn-quiet" type="button">They differ</button>
-      <button id="shape-yes" class="btn btn-warm" type="button">They match</button></div>
+    <p id="shape-wait" class="line shape-wait" hidden>Now choose Allow on your PC.</p>
     <p class="waiting" role="status"><i></i><i></i><i></i><span class="sr">Waiting for the PC</span></p>
   </section>
 

@@ -135,11 +135,16 @@ import { pair } from './client.mjs';
       await relay.waitReady();
       door = await pair(relay.send);
       $('shape-no').disabled = $('shape-yes').disabled = false;
+      $('pair-actions').hidden = false;
+      $('shape-wait').hidden = true;
       drawShapes(door.shapes);
       show('shapes');
       const confirmation = new Promise(function (resolve, reject) {
         $('shape-yes').onclick = function () {
           $('shape-no').disabled = $('shape-yes').disabled = true;
+          // The phone has said yes; the PC still has to. Say so, so nobody waits wondering.
+          $('pair-actions').hidden = true;
+          $('shape-wait').hidden = false;
           resolve();
         };
         $('shape-no').onclick = function () {

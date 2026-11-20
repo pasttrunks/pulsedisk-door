@@ -65,7 +65,7 @@ body {
 [hidden] { display: none !important; }
 
 .brand { display: flex; align-items: center; gap: 9px; align-self: flex-start; font-weight: 650; font-size: 15px; letter-spacing: -.01em; color: var(--ink-2); }
-.brand-mark { width: 22px; height: 22px; border-radius: 7px; background: linear-gradient(135deg, #8fa8ff, #6a4fe6); box-shadow: 0 4px 14px -4px rgba(110, 90, 240, .8), inset 0 1px 0 rgba(255, 255, 255, .4); }
+.brand-mark { display: block; width: 22px; height: 22px; }
 
 main { width: 100%; max-width: 560px; flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 24px 0 8px; }
 .screen { display: flex; flex-direction: column; align-items: center; text-align: center; animation: rise .6s var(--ease) both; }
@@ -108,7 +108,7 @@ h2 { margin: 0 0 10px; font-size: 15px; font-weight: 650; color: var(--ink-2); l
 .shape:nth-child(2) svg { animation-delay: 2.1s; }
 .shape:nth-child(3) svg { animation-delay: 2.6s; }
 .shape figcaption { font-size: 14px; font-weight: 600; color: var(--ink-2); }
-.waiting { display: flex; gap: 8px; margin: 0; }
+.waiting { display: flex; gap: 8px; margin: 16px 0 0; }
 .waiting i { width: 9px; height: 9px; border-radius: 50%; background: var(--warm); animation: dot 1.2s ease-in-out infinite; }
 .waiting i:nth-child(2) { animation-delay: .15s; }
 .waiting i:nth-child(3) { animation-delay: .3s; }
@@ -171,3 +171,4 @@ h2 { margin: 0 0 10px; font-size: 15px; font-weight: 650; color: var(--ink-2); l
 }
 
 .pair-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.shape-wait { margin-top: 4px; color: var(--ink); font-weight: 600; }
